@@ -1,18 +1,18 @@
-import datetime as _dt
-import pydantic as _pydantic
+# schemas.py
+from pydantic import BaseModel, EmailStr, ConfigDict  # pridaj ConfigDict
 
-class _BaseContact(_pydantic.BaseModel):
+class CreateContact(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr
+    phone_number: str
+
+class Contact(BaseModel):
+    id: int
     first_name: str
     last_name: str
     email: str
     phone_number: str
 
-class Contact(_BaseContact):
-    id: int
-    date_create: _dt.datetime
-
-    class Config:
-        orm_mode = True
-
-class CreateContact(_BaseContact):
-    pass
+    # dôležité: umožní validáciu z ORM inštancie
+    model_config = ConfigDict(from_attributes=True)
