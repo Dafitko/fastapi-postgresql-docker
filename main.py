@@ -41,3 +41,7 @@ def update_contact(
 def delete_contact(contact_id: int, db: Session = Depends(_services.get_db)):
     _services.delete_contact(contact_id, db)
     return None
+
+@app.get("/docker-test")
+def docker_test():
+    return {"running": "from docker"}
