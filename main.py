@@ -4,7 +4,7 @@ import sqlalchemy.orm as _orm
 import schemas as _schemas
 import services as _services
 
-from fastapi import Depends
+from fastapi import Depends, status
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -29,4 +29,15 @@ def get_contacts(db: Session = Depends(_services.get_db)):
     rows = _services.list_contacts(db)
     return [_schemas.Contact.model_validate(r) for r in rows]
 
+@app.put("/api/contacts/{contact_id}", response_model=_schemas.Contact)
+def update_contact(
+    contact_id: int,
+    updated_contact: _schemas.CreateContact,
+    db: Session = Depends(_services.get_db),
+):
+    return _services.update_contact_put(contact_id, updated_contact, db)
 
+@app.delete("/api/contacts/{contact_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_contact(contact_id: int, db: Session = Depends(_services.get_db)):
+    _services.delete_contact(contact_id, db)
+    return None
